@@ -6,7 +6,7 @@ header('Content-Type: application/json; charset=utf8');
 $koneksi = mysqli_connect("localhost", "root", "", "perpustakaansm");
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sql = "SELECT * FROM  buku";
+    $sql = "SELECT * FROM  kategoribuku";
     $query = mysqli_query($koneksi, $sql);
     $array_data = array();
     while ($data = mysqli_fetch_assoc($query)) {
@@ -14,12 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
     echo json_encode($array_data);
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $judul = $_POST['judul'];
-    $penulis = $_POST['penulis'];
-    $penerbit = $_POST['penerbit'];
-    $tahun_terbit = $_POST['tahun_terbit'];
-    $foto_buku = $_POST['foto_buku'];
-    $sql = "INSERT INTO buku (judul, penulis, penerbit, tahun_terbit,  foto_buku) VALUES('$judul','$penulis', '$penerbit', '$tahun_terbit','$foto_buku')";
+    $nama_kategori = $_POST['nama_kategori'];
+    $sql = "INSERT INTO kategoribuku (nama_kategori ) VALUES('$nama_kategori')";
     $cekdata = mysqli_query($koneksi, $sql);
 
     if ($cekdata) {
@@ -30,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode([$data]);
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $buku_id = $_GET['buku_id'];
-    $sql = "DELETE FROM buku WHERE buku_id ='$buku_id'";
+    $kategori_id = $_GET['kategori_id'];
+    $sql = "DELETE FROM kategoribuku WHERE kategori_id ='$kategori_id'";
     $cekdata = mysqli_query($koneksi, $sql);
 
     if ($cekdata) {
@@ -42,13 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode([$data]);
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $buku_id = $_GET['buku_id'];
-    $judul = $_GET['judul'];
-    $penulis = $_GET['penulis'];
-    $penerbit = $_GET['penerbit'];
-    $tahun_terbit = $_GET['tahun_terbit'];
-    $foto_buku = $_GET['foto_buku'];
-    $sql = "UPDATE buku SET judul='$judul', penulis='$penulis', penerbit='$penerbit' , tahun_terbit='$tahun_terbit' ,  foto_buku='$foto_buku' WHERE buku_id='$buku_id'";
+    $kategori_id = $_GET['kategori_id'];
+    $nama_kategori = $_GET['nama_kategori'];
+    
+    $sql = "UPDATE kategoribuku SET nama_kategori='$nama_kategori', WHERE kategori_id='$kategori_id'";
 
     $cekdata = mysqli_query($koneksi, $sql);
 

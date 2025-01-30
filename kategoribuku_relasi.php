@@ -6,12 +6,11 @@ header('Content-Type: application/json; charset=utf8');
 $koneksi = mysqli_connect("localhost", "root", "", "perpustakaansm");
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sql = "SELECT koleksipribadi.*, 
-                user.user_id, user.username AS username,
-                buku.buku_id, buku.judul AS judul
-            FROM koleksipribadi
-            INNER JOIN user ON koleksipribadi.user_id = user.user_id
-            INNER JOIN buku ON koleksipribadi.buku_id = buku.buku_id";
+    $sql = "SELECT kategoribuku_relasi.*, 
+                   kategoribuku.kategori_id,        buku.buku_id 
+            FROM kategoribuku_relasi
+            INNER JOIN kategoribuku ON kategoribuku_relasi.kategori_id = kategoribuku.kategori_id
+            INNER JOIN buku ON kategoribuku_relasi.buku_id = buku.buku_id";
     $query = mysqli_query($koneksi, $sql);
     $array_data = array();
     while ($data = mysqli_fetch_assoc($query)) {
@@ -19,11 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
     echo json_encode($array_data);
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_POST['user_id'];
+    $kategori_id = $_POST['kategori_id'];
     $buku_id = $_POST['buku_id'];
 
-    $sql = "INSERT INTO koleksipribadi (user_id, buku_id) 
-            VALUES ('$user_id', '$buku_id')";
+    $sql = "INSERT INTO kategoribuku_relasi (kategori_id, buku_id) 
+            VALUES ('$kategori_id', '$buku_id')";
     $cekdata = mysqli_query($koneksi, $sql);
 
     if ($cekdata) {
@@ -34,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode([$data]);
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $koleksi_id = $_GET['koleksi_id'];
-    $sql = "DELETE FROM koleksipribadi WHERE koleksi_id='$koleksi_id'";
+    $kategoribuku_id = $_GET['kategoribuku_id'];
+    $sql = "DELETE FROM kategoribuku_relasi WHERE kategoribuku_id='$kategoribuku_id'";
     $query = mysqli_query($koneksi, $sql);
 
     if ($query) {
@@ -44,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         echo json_encode(['status' => 'gagal', 'message' => 'Gagal menghapus data']);
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $koleksi_id = $_GET['koleksi_id'];
-    $user_id = $_GET['user_id'];
+    $kategoribuku_id = $_GET['kategoribuku_id'];
+    $kategori_id = $_GET['kategori_id'];
     $buku_id = $_GET['buku_id'];
 
-    $sql = "UPDATE koleksipribadi SET user_id='$user_id', buku_id='$buku_id' WHERE koleksi_id='$koleksi_id'";
+    $sql = "UPDATE kategoribuku_relasi SET kategori_id='$kategori_id', buku_id='$buku_id' WHERE kategoribuku_id='$kategoribuku_id'";
 
     $cekdata = mysqli_query($koneksi, $sql);
 
